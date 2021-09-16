@@ -1,0 +1,114 @@
+*, *::before, *::after{
+  box-sizing: border-box;
+  padding: 0px;margin: 0px;
+}
+
+:root{
+/* ColorScheme START */
+  color-scheme: light;
+
+  --color-main-hue: 200deg;
+  --color-main-saturation: 100%;
+  --color-main-lightness: 50%;
+
+  --color-main: hsla(
+    var(--color-main-hue),
+    var(--color-main-saturation),
+    var(--color-main-lightness), 1);
+
+  --color-text-primary: hsla(var(--color-main-hue), var(--color-main-saturation), 10%, 1);
+  --color-text-secondary: hsla(var(--color-main-hue), 30%, 30%, 1);
+
+  --color-surface-1: hsla(var(--color-main-hue), 20%, 85%, 1);
+  --color-surface-2: hsla(var(--color-main-hue), 25%, 90%, 1);
+  --color-surface-3: hsla(var(--color-main-hue), 20%, 92%, 1);
+  --color-surface-4: hsla(var(--color-main-hue), 20%, 99%, 1);
+
+  --color-shadow: var(--color-main-hue) 10% 20%;
+  --shadow-opacity: 0.08;
+/* ColorScheme END */
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme: dark;
+
+    --color-main: hsla(
+      var(--color-main-hue),
+      calc(var(--color-main-saturation) / 2),
+      calc(var(--color-main-lightness) / 1.5), 1);
+
+    --color-text-primary: hsla(var(--color-main-hue), 15%, 95%, 1);
+    --color-text-secondary: hsla(var(--color-main-hue), 5%, 75%, 1);
+
+    --color-surface-1: hsla(var(--color-main-hue), 10%, 10%, 1);
+    --color-surface-2: hsla(var(--color-main-hue), 5%, 15%, 1);
+    --color-surface-3: hsla(var(--color-main-hue), 5%, 20%, 1);
+    --color-surface-4: hsla(var(--color-main-hue), 5%, 30%, 1);
+
+    --color-shadow: var(--color-main-hue) 50% 3%;
+    --shadow-opacity: 0.3;
+  }
+}
+
+body{
+  background-color: var(--color-surface-1);
+  color: var(--color-text-secondary);
+  padding: 30px;
+  font-size: 15px;
+  font-family: monospace;
+
+  display: grid;
+  grid-gap: 20px;
+  place-items: center;
+}
+
+body > a{
+  color: var(--color-text-primary);
+  text-decoration: none;
+  font-size: 30px;
+}
+body > a:hover{
+  text-decoration: underline;
+}
+body > form{
+  background-color: var(--color-surface-3);
+  width: 100%;
+  padding: 20px;
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-gap: 10px;
+}
+body > form > input[type=text]{
+  background-color: var(--color-surface-4);
+  border: none;
+  padding: 5px 10px;
+  font-size: 25px;
+}
+body > form > input[type=submit]{
+  background-color: var(--color-main);
+  border: none;
+  padding: 5px;
+  font-size: 15px;
+}
+
+body > section{
+  width: 100%;
+}
+body > section > table{
+  width: 100%;
+  background-color: var(--color-surface-3);
+  color: var(--color-text-secondary);
+  border-spacing: 5px;
+  padding: 20px;
+}
+body > section > table td{
+  background-color: var(--color-surface-4);
+  color: var(--color-text-primary);
+  padding: 10px;
+}
+
+body > section table td:nth-child(2n){
+  text-transform: uppercase;
+}
