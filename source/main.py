@@ -1,3 +1,17 @@
+# https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+# https://stackoverflow.com/questions/16778435/python-check-if-website-exists/52949558
+# https://docs.python-requests.org/en/latest/user/quickstart/
+# https://httpstatus.io/
+
+# "head" only gets status code and headers
+# "get" gets "head" + message body
+# get.text = body
+# get.content = Binary Response Content
+# *.status_code = status code
+# *.encoding  = encoding
+# for response in responses.history:
+#     print(f'{response.status_code})
+
 from flask import Flask, render_template, url_for, make_response, redirect, request
 import requests, json, validators, datetime
 
@@ -32,32 +46,39 @@ def home():
         return render_template("index.html", **globals(), **locals())
 
     elif request.method == "POST":
-        if request.get_json()["for"] == "URLcheck":
-            if validators.url(request.get_json()["URL"]):
-                data = None
-                try:
-                    getHeaders = requests.head(request.get_json()["URL"])
-                except requests.exceptions.HTTPError:
-                    data = {"PythonResponse": "OK", "HTTPErrorResponse": "HTTP Error"}
-                except requests.exceptions.ConnectionError:
-                    data = {"PythonResponse": "OK", "HTTPErrorResponse": "Connection Error. This site can’t be reached"}
-                else:
-                    data = {
-                                    "Python response": "OK",
-                                    "data": {
-                                        "url": getHeaders.url,
-                                        "status": getHeaders.status_code,
-                                        "statusDescription": requests.status_codes._codes[getHeaders.status_code][0].replace("_", " "),
-                                        "responseTime": getHeaders.elapsed.total_seconds()
-                                    }
-                                }
 
-                    with open("history/history.txt", "a") as f:
-                        f.write(f'{getHeaders.status_code}|{requests.status_codes._codes[getHeaders.status_code][0].replace("_", " ")}|{getHeaders.url}|{getHeaders.elapsed.total_seconds()}|{datetime.datetime.now()}\n')
-            else:
-                data = {"PythonResponse": "OK", "HTTPErrorResponse": "Invalid URL"}
+        # REQUEST VALIDATING
+        if request.get_json()["for"] != "URLcheck":
+            return make_response(json.dumps({"PythonResponse": "BAD_REQUEST"}), 400)
 
-            return make_response(json.dumps(data), 200)
+        # URL VALIDATING
+        if not validators.url(request.get_json()["URL"]):
+            return make_response(json.dumps({"PythonResponse": "OK", "HTTPErrorResponse": "Invalid URL"}), 200)
+
+        # GETTING HEADERS
+        data = None
+        try:
+            getHeaders = requests.head(request.get_json()["URL"])
+        except requests.exceptions.HTTPError:
+            data = {"PythonResponse": "OK", "HTTPErrorResponse": "HTTP Error"}
+        except requests.exceptions.ConnectionError:
+            data = {"PythonResponse": "OK", "HTTPErrorResponse": "Connection Error. This site can’t be reached"}
+        else:
+            data = {
+                            "PythonResponse": "OK",
+                            "data": {
+                                "url": getHeaders.url,
+                                "status": getHeaders.status_code,
+                                "statusDescription": requests.status_codes._codes[getHeaders.status_code][0].replace("_", " "),
+                                "responseTime": getHeaders.elapsed.total_seconds()
+                            }
+                        }
+
+            # HISTORY WRITING
+            with open("history/history.txt", "a") as f:
+                f.write(f'{getHeaders.status_code}|{requests.status_codes._codes[getHeaders.status_code][0].replace("_", " ")}|{getHeaders.url}|{getHeaders.elapsed.total_seconds()}|{datetime.datetime.now()}\n')
+
+        return make_response(json.dumps(data), 200)
 
 @app.route("/historyBook", methods=["GET"])
 def historyBook():
