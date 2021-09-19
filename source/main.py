@@ -1,17 +1,3 @@
-# https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-# https://stackoverflow.com/questions/16778435/python-check-if-website-exists/52949558
-# https://docs.python-requests.org/en/latest/user/quickstart/
-# https://httpstatus.io/
-
-# "head" only gets status code and headers
-# "get" gets "head" + message body
-# get.text = body
-# get.content = Binary Response Content
-# *.status_code = status code
-# *.encoding  = encoding
-# for response in responses.history:
-#     print(f'{response.status_code})
-
 from flask import Flask, render_template, url_for, make_response, redirect, request
 import requests, json, validators, datetime
 
